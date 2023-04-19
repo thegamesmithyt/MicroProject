@@ -228,10 +228,8 @@ void KeyScanOp()
 	SetCol4();
 	wait(0.2);
 	if ( row1 == 1 )
-		KeyA();
 		Op = 1;
 	if ( row2 == 1 )
-		KeyB();
 		Op = 2;
 }
 
