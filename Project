@@ -1,0 +1,344 @@
+#include "mbed.h"
+BusOut	Disp1 (PTC6,PTC5,PTC16,PTA16,PTA17,PTC10,PTC11,PTC17)
+
+DigitalOut Vdd1 (PTC17);
+
+DigitalIn Row1 (PTE4);
+DigitalIn Row2 (PTE3);
+DigitalIn Row3 (PTE2);
+DigitalIn Row4 (PTB11);
+
+DigitalOut Col1 (PTB10);
+DigitalOut Col2 (PTB9);
+DigitalOut Col3 (PTB8);
+DigitalOut Col4 (PTB7);
+
+void SetVdd()
+{
+	Vdd1 = 0;
+}
+
+int In1 = 0;
+int In2 = 0;
+int InOp = 0;
+
+int V1 = 0;
+int V2 = 0;
+int R = 0;
+
+in Op = 0;
+
+void SetCollOW()
+{
+	Col1 = 0;
+	Col2 = 0;
+	Col3 = 0;
+	Col4 = 0;
+}
+
+
+void SetCol1()
+{
+	Col1 = 1;
+	Col2 = 0;
+	Col3 = 0;
+	Col4 = 0;
+}
+
+void SetCol2()
+{
+	Col1 = 0;
+	Col2 = 1;
+	Col3 = 0;
+	Col4 = 0;
+}
+
+void SetCol3()
+{
+	Col1 = 0;
+	Col2 = 0;
+	Col3 = 1;
+	Col4 = 0;
+}
+
+void SetCol4()
+{
+	Col1 = 0;
+	Col2 = 0;
+	Col3 = 0;
+	Col4 = 1;
+}
+
+void Key1()
+{
+	Disp1 = 0x06;
+}
+
+void Key2()
+{
+	Disp1 = 0x5B;
+}
+
+void Key3()
+{
+	Disp1 = 0x4F;
+}
+
+void Key4()
+{
+	Disp1 = 0x66;
+}
+
+void Key5()
+{
+	Disp1 = 0x6D;
+}
+
+void Key6()
+{
+	Disp1 = 0x7D;
+}
+
+void Key7()
+{
+	Disp1 = 0x07;
+}
+
+void Key8()
+{
+	Disp1 = 0x7F;
+}
+
+void Key9()
+{
+	Disp1 = 0x4F;
+}
+
+void Key0()
+{
+	Disp1 = 0x3F;
+}
+
+void ShowA()
+{
+	Disp1 = 0x77;
+}
+
+void ShowF()
+{
+	Disp1 = 0x71
+}
+
+void KeyScan1()
+{
+	SetCollOW();
+	wait(0.2);
+	SetCol1();
+	wait(0.2);
+	if ( row1 == 1 )
+		Key1();
+		V1 = 1;
+	if ( row2 == 1 )
+		Key4();
+		V1 = 4;
+	if ( row3 == 1 )
+		Key7();
+		V1 = 7;
+
+	wait(0.1);
+	SetCol2();
+	wait(0.2);
+	if ( row1 == 1 )
+		Key2();
+		V1 = 2;
+	if ( row2 == 1 )
+		Key5();
+		V1 = 5;
+	if ( row3 == 1 )
+		Key8();
+		V1 =  8;
+	if ( row4 == 1 )
+		Key0();
+		V1 = 0;
+
+	wait(0.1);
+	SetCol3();
+	wait(0.2);
+	if ( row1 == 1 )
+		Key3();
+		V1 = 3;
+	if ( row2 == 1 )
+		Key6();
+		V1 = 6;
+	if ( row3 == 1 )
+		Key9();
+		V1 = 9;
+}
+
+void KeyScan2()
+{
+	SetCollOW();
+	wait(0.2);
+	SetCol1();
+	wait(0.2);
+	if ( row1 == 1 )
+		Key1();
+		V2 = 1;
+	if ( row2 == 1 )
+		Key4();
+		V2 = 4;
+	if ( row3 == 1 )
+		Key7();
+		V2 = 7;
+
+	wait(0.1);
+	SetCol2();
+	wait(0.2);
+	if ( row1 == 1 )
+		Key2();
+		V2 = 2;
+	if ( row2 == 1 )
+		Key5();
+		V2 = 5;
+	if ( row3 == 1 )
+		Key8();
+		V2 = 8;
+	if ( row4 == 1 )
+		Key0();
+		V2 = 0;
+
+	wait(0.1);
+	SetCol3();
+	wait(0.2);
+	if ( row1 == 1 )
+		Key3();
+		V2 = 3;
+	if ( row2 == 1 )
+		Key6();
+		V2 = 6;
+	if ( row3 == 1 )
+		Key9();
+		V2 = 9;
+}
+
+void KeyScanOp()
+{
+	SetCollOW();
+	wait(0.1);
+	SetCol4();
+	wait(0.2);
+	if ( row1 == 1 )
+		KeyA();
+		Op = 1;
+	if ( row2 == 1 )
+		KeyB();
+		Op = 2;
+}
+
+int main()
+{
+	While (1)
+		{
+			SetVdd();
+
+			if ( In1 == 0 )
+			{
+				KeyScan1();
+				In1 = 1;
+			}
+
+			if ( In1 != 0 && InOp == 0 )
+			{
+				KeyScanOp();
+				InOp = 1;
+			}
+
+			if ( In1 != 0 && InOp != 0 && In2 == 0 )
+			{
+				KeyScan2();
+				In2 = 1;
+			}
+
+			if ( In1 != 0 && InOp != 0 && In2 != 0 )
+			{
+				if ( Op == 1 )
+				{
+					R = V1 + V2
+				}
+
+				if ( Op == 2 )
+				{
+					R = V1 - V2
+				}
+
+				if ( R > 9 )
+				{
+					ShowF();
+				}
+
+				if ( R < 0 )
+				{
+					ShowA();
+				}
+
+				if ( R == 0 )
+				{
+					Key0();
+				}
+
+				if ( R == 1 )
+				{
+					Key1();
+				}
+
+				if ( R == 2 )
+				{
+					Key2();
+				}
+
+				if ( R == 3 )
+				{
+					Key3();
+				}
+
+				if ( R == 4 )
+				{
+					Key4();
+				}
+
+				if ( R == 5 )
+				{
+					Key5();
+				}
+
+				if ( R == 6 )
+				{
+					Key6();
+				}
+
+				if ( R == 7 )
+				{
+					Key7();
+				}
+
+				if ( R == 8 )
+				{
+					Key8();
+				}
+
+				if ( R == 9 )
+				{
+					Key9();
+				}
+
+				wait(15)
+				R = 0;
+				V1 = 0;
+				V2 = 0;
+				In1 = 0;
+				In2 = 0;
+				InOp = 0;
+				Op = 0;
+			}
+		}
+}
